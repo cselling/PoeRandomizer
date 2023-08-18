@@ -62,10 +62,25 @@
             <div id='buildList'>Marauder, Templar, Witch, Shadow, Ranger, Duelist, Scion</div>
         </div>
         <div><br></div>
+               
+        <button type='button' class='collapsible disable-select' onclick='mineShaft(this)'>Ascendant</button>
+        <div class='content disable-select centered'>
+            <br>
+            <div id='ascendList'>Marauder, Templar, Witch, Shadow, Ranger, Duelist, Scion</div>
+            
+            <div><br></div>
+            
+            <div class='centered disable-select'><button type='button' onclick='rollAscendant()'>Ascend!!</button></div>
+            <div><br></div>
+
+        </div>
+        <div><br></div>
         
         <button type='reset' class='disable-select' onclick='resetPage()'>Reset</button>
+
         <pre id='History'></pre>
     </body>
+    
     
 </html>
 
@@ -73,7 +88,7 @@
     
     classTable = ['Marauder', 'Templar', 'Witch', 'Shadow', 'Ranger', 'Duelist', 'Scion'];
     buildTable = ['Melee', 'Totem/Brand', 'Bow/Wand', 'Spell/Minion', 'Trap/Mine', 'Triggers'];
-    //optionTable = ['Split Totems and Brands', 'Split Bows and Wands', 'Split off Minions', 'Split Traps and Mines'];
+    ascendTable = [['Berserker', 'Juggernaut', 'Chieftain'], ['Inquisitor', 'Hierophant', 'Guardian'], ['Elementalist', 'Occultist', 'Necromancer'], ['Assasin', 'Saboteur', 'Trickster'], ['Deadeye', 'Raider', 'Pathfinder'], ['Gladiator', 'Champion', 'Slayer']];
     
     function randomized(num){
         return Math.floor((Math.random()*num));
@@ -112,6 +127,39 @@
         document.getElementById('History').appendChild(document.createTextNode(result+'\n'));
     }
     
+    function rollAscendant(){
+        var result, r1, r2;
+        var activeAscendTable = [];
+        
+        var k = 0;
+        for(var i = 0; i < ascendTable.length; i++){
+            var activeClassTable = [];
+            for(var j = 0; j < ascendTable[i].length; j++){
+                if(document.getElementById(ascendTable[i][j]).checked == true){
+                    activeClassTable.push(ascendTable[i][j]);
+                }
+            }
+            if(activeClassTable.length > 0){
+                activeAscendTable.push(activeClassTable);
+                k++;
+            }
+        }      
+        
+        if(activeAscendTable.length < 2 ){
+            result = 'Set some options, dummy!';
+        } else {
+            do {
+                r1 = randomized(activeAscendTable.length);
+                r2 = randomized(activeAscendTable.length);
+            } while (r1 == r2)
+            result = 'Ascend ' + activeAscendTable[r1][randomized(activeAscendTable[r1].length)] + ' ' + activeAscendTable[r2][randomized(activeAscendTable[r2].length)]+'!';
+        }
+        
+        document.getElementById('result').innerHTML = result;
+        document.getElementById('History').appendChild(document.createTextNode(result+'\n'));
+        
+    }
+    
   
     function createCheckBox(name, place, on){
         var x = document.createElement('input');
@@ -148,11 +196,19 @@
         for(var i = 0; i < buildTable.length; i++){
             document.getElementById(buildTable[i]).checked = true;
         }
+        
+        for(var i = 0; i < ascendTable.length; i++){  
+            for(var j = 0; j < ascendTable[i].length; j++){
+                document.getElementById(ascendTable[i][j]).checked = true;
+            }
+        }
+
     }
     
     function initialize(){
         document.getElementById('classList').innerHTML = '';
         document.getElementById('buildList').innerHTML = '';
+        document.getElementById('ascendList').innerHTML = '';
         document.getElementById('result').innerHTML = 'Push the Button';
         document.getElementById('description').innerHTML = '';
         document.getElementById('History').innerHTML = '';
@@ -164,6 +220,13 @@
         for(var i = 0; i < buildTable.length; i++){  
             createCheckBox(buildTable[i], 'buildList', true);
         }
+        
+        for(var i = 0; i < ascendTable.length; i++){  
+            for(var j = 0; j < ascendTable[i].length; j++){
+                createCheckBox(ascendTable[i][j], 'ascendList', true);
+            }
+        }
+
     }
     
     initialize();
